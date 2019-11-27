@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView SUMAmount;
     private List<Category> categories;
 
+    private final String adornment = " kr";
+
     /**
      * Helper class Category.
      *
@@ -40,17 +42,17 @@ public class MainActivity extends AppCompatActivity {
             this.add = add;
             this.sub = sub;
 
-            this.amount.setText(initValue.toString());
+            this.amount.setText(initValue.toString() + adornment);
             this.amount.setKeyListener(null);
             this.juster.setText("0");
 
             this.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Integer addValue = Integer.parseInt(juster.getText().toString());
-                    Integer currentValue = Integer.parseInt(amount.getText().toString());
+                    Integer addValue = Integer.parseInt(juster.getText().toString().replaceAll("[^\\d.]", ""));
+                    Integer currentValue = Integer.parseInt(amount.getText().toString().replaceAll("[^\\d.]", ""));
                     Integer newValue = currentValue + addValue;
-                    amount.setText(newValue.toString());
+                    amount.setText(newValue.toString() + adornment);
                     juster.setText("0");
                     closeKeyBoard();
                     juster.clearFocus();
@@ -62,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
             this.sub.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Integer subValue = Integer.parseInt(juster.getText().toString());
-                    Integer currentValue = Integer.parseInt(amount.getText().toString());
+                    Integer subValue = Integer.parseInt(juster.getText().toString().replaceAll("[^\\d.]", ""));
+                    Integer currentValue = Integer.parseInt(amount.getText().toString().replaceAll("[^\\d.]", ""));
                     Integer newValue = currentValue - subValue;
-                    amount.setText(newValue.toString());
+                    amount.setText(newValue.toString() + adornment);
                     juster.setText("0");
                     closeKeyBoard();
                     juster.clearFocus();
@@ -95,19 +97,19 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPref = getSharedPreferences("Socks_Mat", MODE_PRIVATE);
         String storageValue = sharedPref.getString("Socks_Mat", null);
-        Integer mat = storageValue == null ? -666 : Integer.parseInt(storageValue);
+        Integer mat = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
 
         sharedPref = getSharedPreferences("Socks_Drikke", MODE_PRIVATE);
         storageValue = sharedPref.getString("Socks_Drikke", null);
-        Integer drikke = storageValue == null ? -666 : Integer.parseInt(storageValue);
+        Integer drikke = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
 
         sharedPref = getSharedPreferences("Socks_Ute", MODE_PRIVATE);
         storageValue = sharedPref.getString("Socks_Ute", null);
-        Integer ute = storageValue == null ? -666 : Integer.parseInt(storageValue);
+        Integer ute = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
 
         sharedPref = getSharedPreferences("Socks_Annet", MODE_PRIVATE);
         storageValue = sharedPref.getString("Socks_Annet", null);
-        Integer annet = storageValue == null ? -666 : Integer.parseInt(storageValue);
+        Integer annet = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
 
         categories = new ArrayList<>();
         categories.add(
@@ -170,9 +172,9 @@ public class MainActivity extends AppCompatActivity {
     private void updateSUM() {
         Integer sum = 0;
         for (Category c : categories) {
-            sum += Integer.parseInt(c.amount.getText().toString());
+            sum += Integer.parseInt(c.amount.getText().toString().replaceAll("[^\\d.]", ""));
         }
-        SUMAmount.setText(sum.toString());
+        SUMAmount.setText(sum.toString() + adornment);
     }
 
     /**
