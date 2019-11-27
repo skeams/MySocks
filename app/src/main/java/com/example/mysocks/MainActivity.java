@@ -14,6 +14,68 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    class Category {
+        String title;
+        Integer initValue;
+        TextView amount;
+        TextView juster;
+        Button add;
+        Button sub;
+
+        /**
+         * Helper Class
+         *
+         * @param title
+         * @param initValue
+         * @param amount
+         * @param juster
+         * @param add
+         * @param sub
+         */
+        Category(String title, Integer initValue, final TextView amount, final TextView juster, Button add, Button sub) {
+            this.title = title;
+            this.initValue = initValue;
+            this.amount = amount;
+            this.juster = juster;
+            this.add = add;
+            this.sub = sub;
+
+            this.amount.setText(initValue.toString());
+            this.amount.setKeyListener(null);
+            this.juster.setText("0");
+
+            this.add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Integer addValue = Integer.parseInt(juster.getText().toString());
+                    Integer currentValue = Integer.parseInt(amount.getText().toString());
+                    Integer newValue = currentValue + addValue;
+                    amount.setText(newValue.toString());
+                    juster.setText("0");
+                    closeKeyBoard();
+                    juster.clearFocus();
+                    updateSUM();
+                    save();
+                }
+            });
+
+            this.sub.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Integer subValue = Integer.parseInt(juster.getText().toString());
+                    Integer currentValue = Integer.parseInt(amount.getText().toString());
+                    Integer newValue = currentValue - subValue;
+                    amount.setText(newValue.toString());
+                    juster.setText("0");
+                    closeKeyBoard();
+                    juster.clearFocus();
+                    updateSUM();
+                    save();
+                }
+            });
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,71 +83,11 @@ public class MainActivity extends AppCompatActivity {
         initValues();
     }
 
+    TextView SUMAmount;
+    private List<Category> categories;
+
     private void initValues() {
-
-        class Category {
-            String title;
-            Integer initValue;
-            TextView amount;
-            TextView juster;
-            Button add;
-            Button sub;
-
-            /**
-             * Helper Class
-             *
-             * @param title
-             * @param initValue
-             * @param amount
-             * @param juster
-             * @param add
-             * @param sub
-             */
-            Category(String title, Integer initValue, final TextView amount, final TextView juster, Button add, Button sub) {
-                this.title = title;
-                this.initValue = initValue;
-                this.amount = amount;
-                this.juster = juster;
-                this.add = add;
-                this.sub = sub;
-
-                this.amount.setText(initValue.toString());
-                this.amount.setKeyListener(null);
-                this.juster.setText("0");
-
-                this.add.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Integer addValue = Integer.parseInt(juster.getText().toString());
-                        Integer currentValue = Integer.parseInt(amount.getText().toString());
-                        Integer newValue = currentValue + addValue;
-                        amount.setText(newValue.toString());
-                        juster.setText("0");
-                        closeKeyBoard();
-                        juster.clearFocus();
-                        updateSUM();
-                        save();
-                    }
-                });
-
-                this.sub.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Integer subValue = Integer.parseInt(juster.getText().toString());
-                        Integer currentValue = Integer.parseInt(amount.getText().toString());
-                        Integer newValue = currentValue - subValue;
-                        amount.setText(newValue.toString());
-                        juster.setText("0");
-                        closeKeyBoard();
-                        juster.clearFocus();
-                        updateSUM();
-                        save();
-                    }
-                });
-            }
-        }
-
-        List<Category> categories = new ArrayList<>();
+        categories = new ArrayList<>();
         categories.add(
             new Category("Mat", 2000,
                     (TextView) findViewById(R.id.MatAmount),
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 )
         );
 
-        TextView SUMAmount = (TextView) findViewById(R.id.SUMAmount);
+        SUMAmount = (TextView) findViewById(R.id.SUMAmount);
         SUMAmount.setKeyListener(null);
         updateSUM();
     }
@@ -136,17 +138,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Updates SUM field
+     */
     private void updateSUM() {
         Integer sum = 0;
-        TextView SUMAmount = (TextView) findViewById(R.id.SUMAmount);
+        for (Category c : categories) {
+            sum += Integer.parseInt(c.amount.getText().toString());
+        }
         SUMAmount.setText(sum.toString());
-        SUMAmount.setKeyListener(null);
     }
 
     /**
      * Store data
      */
     private void save() {
+        // TODO Implement
+        // TODO Implement
+        // TODO Implement
+        // TODO Implement    ---------------- AND LOADING
+        // TODO Implement
+        // TODO Implement
         // TODO Implement
     }
 
