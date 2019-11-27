@@ -1,8 +1,10 @@
 package com.example.mysocks;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -13,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private TextView SUMAmount;
+    private List<Category> categories;
 
     /**
      * Helper class Category.
@@ -78,16 +83,35 @@ public class MainActivity extends AppCompatActivity {
         initValues();
     }
 
-    private TextView SUMAmount;
-    private List<Category> categories;
-
     /**
      * Initialize buttons and fields
+     *
+     *
      */
     private void initValues() {
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+        SharedPreferences sharedPref = getSharedPreferences("Socks_Mat", MODE_PRIVATE);
+        String storageValue = sharedPref.getString("Socks_Mat", null);
+        Integer mat = storageValue == null ? -666 : Integer.parseInt(storageValue);
+
+        sharedPref = getSharedPreferences("Socks_Drikke", MODE_PRIVATE);
+        storageValue = sharedPref.getString("Socks_Drikke", null);
+        Integer drikke = storageValue == null ? -666 : Integer.parseInt(storageValue);
+
+        sharedPref = getSharedPreferences("Socks_Ute", MODE_PRIVATE);
+        storageValue = sharedPref.getString("Socks_Ute", null);
+        Integer ute = storageValue == null ? -666 : Integer.parseInt(storageValue);
+
+        sharedPref = getSharedPreferences("Socks_Annet", MODE_PRIVATE);
+        storageValue = sharedPref.getString("Socks_Annet", null);
+        Integer annet = storageValue == null ? -666 : Integer.parseInt(storageValue);
+
         categories = new ArrayList<>();
         categories.add(
-            new Category("Mat", 2000,
+            new Category("Mat", mat,
                     (TextView) findViewById(R.id.MatAmount),
                     (TextView) findViewById(R.id.MatJuster),
                     (Button) findViewById(R.id.MatAdd),
@@ -95,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             )
         );
         categories.add(
-                new Category("Drikke", 2000,
+                new Category("Drikke", drikke,
                         (TextView) findViewById(R.id.DrikkeAmount),
                         (TextView) findViewById(R.id.DrikkeJuster),
                         (Button) findViewById(R.id.DrikkeAdd),
@@ -103,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 )
         );
         categories.add(
-                new Category("Ute", 2000,
+                new Category("Ute", ute,
                         (TextView) findViewById(R.id.UteAmount),
                         (TextView) findViewById(R.id.UteJuster),
                         (Button) findViewById(R.id.UteAdd),
@@ -111,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 )
         );
         categories.add(
-                new Category("Annet", 1000,
+                new Category("Annet", annet,
                         (TextView) findViewById(R.id.AnnetAmount),
                         (TextView) findViewById(R.id.AnnetJuster),
                         (Button) findViewById(R.id.AnnetAdd),
@@ -126,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Closes Keyboard
+     *
+     *
      */
     private void closeKeyBoard() {
         View view = this.getCurrentFocus();
@@ -138,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Updates SUM field
+     *
+     *
      */
     private void updateSUM() {
         Integer sum = 0;
@@ -149,15 +177,17 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Store data
+     *
+     *
      */
     private void save() {
-        // TODO Implement
-        // TODO Implement
-        // TODO Implement
-        // TODO Implement    ---------------- AND LOADING
-        // TODO Implement
-        // TODO Implement
-        // TODO Implement
+        for (Category c : categories) {
+            SharedPreferences sharedPref = getSharedPreferences("Socks_" + c.title, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            String amountString = c.amount.getText().toString();
+            editor.putString("Socks_" + c.title, amountString);
+            editor.commit();
+        }
     }
 
 }
