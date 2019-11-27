@@ -14,7 +14,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    class Category {
+    /**
+     * Helper class Category.
+     *
+     * Holds buttons and fields for each budget category.
+     */
+    private class Category {
         String title;
         Integer initValue;
         TextView amount;
@@ -22,16 +27,6 @@ public class MainActivity extends AppCompatActivity {
         Button add;
         Button sub;
 
-        /**
-         * Helper Class
-         *
-         * @param title
-         * @param initValue
-         * @param amount
-         * @param juster
-         * @param add
-         * @param sub
-         */
         Category(String title, Integer initValue, final TextView amount, final TextView juster, Button add, Button sub) {
             this.title = title;
             this.initValue = initValue;
@@ -83,9 +78,12 @@ public class MainActivity extends AppCompatActivity {
         initValues();
     }
 
-    TextView SUMAmount;
+    private TextView SUMAmount;
     private List<Category> categories;
 
+    /**
+     * Initialize buttons and fields
+     */
     private void initValues() {
         categories = new ArrayList<>();
         categories.add(
