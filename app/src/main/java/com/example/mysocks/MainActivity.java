@@ -2,16 +2,24 @@ package com.example.mysocks;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.method.DigitsKeyListener;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -56,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                     juster.setText("0");
                     closeKeyBoard();
                     juster.clearFocus();
-                    updateSUM();
+                    updateSUMAndText();
                     save();
                 }
             });
@@ -71,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     juster.setText("0");
                     closeKeyBoard();
                     juster.clearFocus();
-                    updateSUM();
+                    updateSUMAndText();
                     save();
                 }
             });
@@ -147,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
         SUMAmount = (TextView) findViewById(R.id.SUMAmount);
         SUMAmount.setKeyListener(null);
-        updateSUM();
+        updateSUMAndText();
     }
 
     /**
@@ -165,16 +173,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Updates SUM field
+     * Updates SUM field and texts.
      *
-     *
+     * We want to know how much is left for the remainder
+     * of the week for certain categories.
      */
-    private void updateSUM() {
+    private void updateSUMAndText() {
         Integer sum = 0;
         for (Category c : categories) {
             sum += Integer.parseInt(c.amount.getText().toString().replaceAll("[^\\d.]", ""));
         }
         SUMAmount.setText(sum.toString() + adornment);
+
+        Calendar calendar = Calendar.getInstance();
+        if (calendar.get(Calendar.DATE) > 25) {
+            calendar.add(Calendar.MONTH, 1);
+        }
+        calendar.set(Calendar.DATE, 25);
+
+        Date payDay = calendar.getTime();
+        Date today = new Date();
+        Integer daysLeftToPay = (int) Math.floor((payDay.getTime() - today.getTime()) / (1000 * 3600 * 24));
+
+        Calendar calendar2 = Calendar.getInstance();
+        Integer daysLeftOfWeek = 7 - ((calendar2.get(Calendar.DAY_OF_WEEK) - 2) % 7);
+
+        TextView SUMText = (TextView) findViewById(R.id.SUMText);
+        SUMText.setText((int) Math.floor(sum / daysLeftToPay) + " kr/dag\ni " + daysLeftToPay + " dager");
+
+        TextView MatAmount = (TextView) findViewById(R.id.MatAmount);
+        Integer matValue = Integer.parseInt(MatAmount.getText().toString().replaceAll("[^\\d.]", ""));
+        TextView MatText = (TextView) findViewById(R.id.MatText);
+        MatText.setText((int) Math.floor(matValue / daysLeftToPay * daysLeftOfWeek) + " kr\nut uken ");
+
+        TextView DrikkeAmount = (TextView) findViewById(R.id.DrikkeAmount);
+        Integer drikkeValue = Integer.parseInt(DrikkeAmount.getText().toString().replaceAll("[^\\d.]", ""));
+        TextView DrikkeText = (TextView) findViewById(R.id.DrikkeText);
+        DrikkeText.setText((int) Math.floor(drikkeValue / daysLeftToPay * daysLeftOfWeek) + " kr\nut uken ");
     }
 
     /**
