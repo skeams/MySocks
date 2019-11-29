@@ -23,6 +23,16 @@ public class MainActivity extends AppCompatActivity {
 
     private final String adornment = " kr";
 
+    private final String MAT_AMOUNT_CODE = "Exps_Mat";
+    private final String DRIKKE_AMOUNT_CODE = "Exps_Drikke";
+    private final String UTE_AMOUNT_CODE = "Exps_Ute";
+    private final String ANNET_AMOUNT_CODE = "Exps_Annet";
+
+    private final String MAT_INIT_CODE = "Exps_Init_Mat";
+    private final String DRIKKE_INIT_CODE = "Exps_Init_Drikke";
+    private final String UTE_INIT_CODE = "Exps_Init_Ute";
+    private final String ANNET_INIT_CODE = "Exps_Init_Annet";
+
     /**
      * Helper class Category.
      *
@@ -31,22 +41,36 @@ public class MainActivity extends AppCompatActivity {
     private class Category {
         String title;
         Integer initValue;
+        Integer storeValue;
         TextView amount;
         TextView juster;
+        TextView init;
         Button add;
         Button sub;
 
-        Category(String title, Integer initValue, final TextView amount, final TextView juster, Button add, Button sub) {
+        Category(
+                String title,
+                Integer storeValue,
+                Integer initValue,
+                final TextView amount,
+                final TextView juster,
+                final TextView init,
+                Button add,
+                Button sub
+        ) {
             this.title = title;
             this.initValue = initValue;
+            this.storeValue = storeValue;
             this.amount = amount;
             this.juster = juster;
+            this.init = init;
             this.add = add;
             this.sub = sub;
 
-            this.amount.setText(initValue.toString() + adornment);
+            this.amount.setText(storeValue.toString() + adornment);
             this.amount.setKeyListener(null);
             this.juster.setText("0");
+            this.init.setText(initValue.toString());
 
             this.add.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -97,57 +121,85 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        SharedPreferences sharedPref = getSharedPreferences("Socks_Mat", MODE_PRIVATE);
-        String storageValue = sharedPref.getString("Socks_Mat", null);
-        Integer mat = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
+        SharedPreferences sharedPref = getSharedPreferences(MAT_AMOUNT_CODE, MODE_PRIVATE);
+        String storageValue = sharedPref.getString(MAT_AMOUNT_CODE, null);
+        Integer matStored = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
 
-        sharedPref = getSharedPreferences("Socks_Drikke", MODE_PRIVATE);
-        storageValue = sharedPref.getString("Socks_Drikke", null);
-        Integer drikke = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
+        sharedPref = getSharedPreferences(MAT_INIT_CODE, MODE_PRIVATE);
+        storageValue = sharedPref.getString(MAT_INIT_CODE, null);
+        Integer matInit = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
 
-        sharedPref = getSharedPreferences("Socks_Ute", MODE_PRIVATE);
-        storageValue = sharedPref.getString("Socks_Ute", null);
-        Integer ute = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
+        /* ---------------------------------------------- */
 
-        sharedPref = getSharedPreferences("Socks_Annet", MODE_PRIVATE);
-        storageValue = sharedPref.getString("Socks_Annet", null);
-        Integer annet = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
+        sharedPref = getSharedPreferences(DRIKKE_AMOUNT_CODE, MODE_PRIVATE);
+        storageValue = sharedPref.getString(DRIKKE_AMOUNT_CODE, null);
+        Integer drikkeStored = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
+
+        sharedPref = getSharedPreferences(DRIKKE_INIT_CODE, MODE_PRIVATE);
+        storageValue = sharedPref.getString(DRIKKE_INIT_CODE, null);
+        Integer drikkeInit = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
+
+        /* ---------------------------------------------- */
+
+        sharedPref = getSharedPreferences(UTE_AMOUNT_CODE, MODE_PRIVATE);
+        storageValue = sharedPref.getString(UTE_AMOUNT_CODE, null);
+        Integer uteStored = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
+
+        sharedPref = getSharedPreferences(UTE_INIT_CODE, MODE_PRIVATE);
+        storageValue = sharedPref.getString(UTE_INIT_CODE, null);
+        Integer uteInit = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
+
+        /* ---------------------------------------------- */
+
+        sharedPref = getSharedPreferences(ANNET_AMOUNT_CODE, MODE_PRIVATE);
+        storageValue = sharedPref.getString(ANNET_AMOUNT_CODE, null);
+        Integer annetStored = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
+
+        sharedPref = getSharedPreferences(ANNET_INIT_CODE, MODE_PRIVATE);
+        storageValue = sharedPref.getString(ANNET_INIT_CODE, null);
+        Integer annetInit = storageValue == null ? 0 : Integer.parseInt(storageValue.replaceAll("[^\\d.]", ""));
+
+        /* ---------------------------------------------- */
 
         categories = new ArrayList<>();
         categories.add(
-            new Category("Mat", mat,
+            new Category("Mat", matStored, matInit,
                     (TextView) findViewById(R.id.MatAmount),
                     (TextView) findViewById(R.id.MatJuster),
+                    (TextView) findViewById(R.id.MatInit),
                     (Button) findViewById(R.id.MatAdd),
                     (Button) findViewById(R.id.MatSub)
             )
         );
         categories.add(
-                new Category("Drikke", drikke,
+                new Category("Drikke", drikkeStored, drikkeInit,
                         (TextView) findViewById(R.id.DrikkeAmount),
                         (TextView) findViewById(R.id.DrikkeJuster),
+                        (TextView) findViewById(R.id.DrikkeInit),
                         (Button) findViewById(R.id.DrikkeAdd),
                         (Button) findViewById(R.id.DrikkeSub)
                 )
         );
         categories.add(
-                new Category("Ute", ute,
+                new Category("Ute", uteStored, uteInit,
                         (TextView) findViewById(R.id.UteAmount),
                         (TextView) findViewById(R.id.UteJuster),
+                        (TextView) findViewById(R.id.UteInit),
                         (Button) findViewById(R.id.UteAdd),
                         (Button) findViewById(R.id.UteSub)
                 )
         );
         categories.add(
-                new Category("Annet", annet,
+                new Category("Annet", annetStored, annetInit,
                         (TextView) findViewById(R.id.AnnetAmount),
                         (TextView) findViewById(R.id.AnnetJuster),
+                        (TextView) findViewById(R.id.AnnetInit),
                         (Button) findViewById(R.id.AnnetAdd),
                         (Button) findViewById(R.id.AnnetSub)
                 )
         );
 
-        SUMAmount = (TextView) findViewById(R.id.SUMAmount);
+        SUMAmount = findViewById(R.id.SUMAmount);
         SUMAmount.setKeyListener(null);
         updateSUMAndText();
     }
@@ -184,26 +236,43 @@ public class MainActivity extends AppCompatActivity {
             calendar.add(Calendar.MONTH, 1);
         }
         calendar.set(Calendar.DATE, 25);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
 
         Date payDay = calendar.getTime();
         Date today = new Date();
-        Integer daysLeftToPay = (int) Math.floor((payDay.getTime() - today.getTime()) / (1000 * 3600 * 24));
+
+        Double daysLeftDouble = (double)(payDay.getTime() - today.getTime()) / (1000 * 3600 * 24);
+        Integer daysLeftToPay = (int) Math.ceil(daysLeftDouble);
 
         Calendar calendar2 = Calendar.getInstance();
         Integer daysLeftOfWeek = 7 - ((calendar2.get(Calendar.DAY_OF_WEEK) - 2) % 7);
 
-        TextView SUMText = (TextView) findViewById(R.id.SUMText);
+        TextView SUMText = findViewById(R.id.SUMText);
         SUMText.setText((int) Math.floor(sum / daysLeftToPay) + " kr/dag\ni " + daysLeftToPay + " dager");
 
-        TextView MatAmount = (TextView) findViewById(R.id.MatAmount);
-        Integer matValue = Integer.parseInt(MatAmount.getText().toString().replaceAll("[^\\d.]", ""));
-        TextView MatText = (TextView) findViewById(R.id.MatText);
-        MatText.setText((int) Math.floor(matValue / daysLeftToPay * daysLeftOfWeek) + " kr\nut uken ");
+        /* ---------------------------------------------- */
 
-        TextView DrikkeAmount = (TextView) findViewById(R.id.DrikkeAmount);
+        TextView MatInit = findViewById(R.id.MatInit);
+        Integer matInit = Integer.parseInt(MatInit.getText().toString().replaceAll("[^\\d.]", ""));
+
+        TextView MatAmount = findViewById(R.id.MatAmount);
+        Integer matValue = Integer.parseInt(MatAmount.getText().toString().replaceAll("[^\\d.]", ""));
+        TextView MatText = findViewById(R.id.MatText);
+
+        Double matUtUka = (double) matValue - (((double) matInit / calendar2.getActualMaximum(Calendar.DAY_OF_MONTH)) * (daysLeftToPay - daysLeftOfWeek));
+        MatText.setText((int)Math.floor(matUtUka) + " kr\nut uken ");
+
+        /* ---------------------------------------------- */
+
+        TextView DrikkeInit = findViewById(R.id.DrikkeInit);
+        Integer drikkeInit = Integer.parseInt(DrikkeInit.getText().toString().replaceAll("[^\\d.]", ""));
+
+        TextView DrikkeAmount = findViewById(R.id.DrikkeAmount);
         Integer drikkeValue = Integer.parseInt(DrikkeAmount.getText().toString().replaceAll("[^\\d.]", ""));
-        TextView DrikkeText = (TextView) findViewById(R.id.DrikkeText);
-        DrikkeText.setText((int) Math.floor(drikkeValue / daysLeftToPay * daysLeftOfWeek) + " kr\nut uken ");
+        TextView DrikkeText = findViewById(R.id.DrikkeText);
+
+        Double drikkeUtUka = (double) drikkeValue - (((double) drikkeInit / calendar2.getActualMaximum(Calendar.DAY_OF_MONTH)) * (daysLeftToPay - daysLeftOfWeek));
+        DrikkeText.setText((int) Math.floor(drikkeUtUka) + " kr\nut uken ");
     }
 
     /**
@@ -213,10 +282,16 @@ public class MainActivity extends AppCompatActivity {
      */
     private void save() {
         for (Category c : categories) {
-            SharedPreferences sharedPref = getSharedPreferences("Socks_" + c.title, MODE_PRIVATE);
+            SharedPreferences sharedPref = getSharedPreferences("Exps_" + c.title, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             String amountString = c.amount.getText().toString();
-            editor.putString("Socks_" + c.title, amountString);
+            editor.putString("Exps_" + c.title, amountString);
+            editor.commit();
+
+            sharedPref = getSharedPreferences("Exps_Init_" + c.title, MODE_PRIVATE);
+            editor = sharedPref.edit();
+            amountString = c.init.getText().toString();
+            editor.putString("Exps_Init_" + c.title, amountString);
             editor.commit();
         }
     }
